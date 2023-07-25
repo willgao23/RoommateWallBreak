@@ -1,0 +1,19 @@
+{
+  "name": "roommate-wall-break",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "lil-gui": "^0.18.2",
+    "three": "^0.154.0",
+    "vercel": "^24.2.4"
+  },
+  "devDependencies": {
+    "vite": "^4.4.7"
+  }
+}
