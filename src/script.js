@@ -14,22 +14,12 @@ const canvas = document.querySelector('canvas.webgl')
 //Scene
 const scene = new THREE.Scene()
 
-//Test sphere
-const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.5, 32, 32),
-    new THREE.MeshStandardMaterial({
-        metalness: 0.3,
-        roughness: 0.4
-    })
-)
-
-sphere.castShadow = true
-sphere.position.y = 0.5
-scene.add(sphere)
+const axesHelper = new THREE.AxesHelper()
+scene.add(axesHelper)
 
 //Floor
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(10, 10),
+    new THREE.PlaneGeometry(100, 100),
     new THREE.MeshStandardMaterial({
         color: "#777777",
         metalness: 0.3,
@@ -78,13 +68,51 @@ window.addEventListener('resize', () =>
 })
 
 //Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 50)
 camera.position.set(-3, 2, 0)
 scene.add(camera)
+
+//Mouse move
+const mouse = {}
+
+window.addEventListener('mousemove', (event) => {
+    mouse.x = event.clientX / sizes.width * 2 - 1
+    mouse.y = - (event.clientY / sizes.height) * 2 + 1
+})
+
+//Physics
+const world = new CANNON.World()
+world.broadphase = new CANNON.SAPBroadphase(world)
+world.allowSleep = true
+world.gravity.set(0, -9.82, 0)
+
+const defaultMaterial = new CANNON.Material('default')
+
+const defaultContactMaterial = new CANNON.ContactMaterial(
+    defaultMaterial,
+    defaultMaterial,
+    {
+        friction: 0.1,
+        restitution: 0.3
+    }
+)
+world.addContactMaterial(defaultContactMaterial)
+world.defaultContactMaterial = defaultContactMaterial
+
+const floorShape = new CANNON.Plane()
+const floorBody = new CANNON.Body()
+floorBody.mass = 0
+floorBody.addShape(floorShape)
+floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
+world.addBody(floorBody)
+
 
 //Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+controls.maxDistance = 20
+controls.minDistance = 20
+controls.minPolarAngle = Math.PI * 0.25
 controls.maxPolarAngle = Math.PI * 0.45
 
 //Renderer
@@ -98,6 +126,82 @@ renderer.shadowMap.type = THREE.PCFShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+//shoot cannonballs
+//get velocity to work, click direction for x and y + z direction velocty
+window.addEventListener('click', () => {
+    let direction = new THREE.Vector3()
+    const dist = 1
+    camera.getWorldDirection(direction)
+    direction.multiplyScalar(dist)
+    direction.add(camera.position)
+
+    //mouse is -1, 1 top left, 1, 1 top right, -1, -1 bottom left, 1, -1 bottom right, not absolute position on screen...
+
+    createSphere(0.5, {x: direction.x, y: direction.y, z: direction.z}, mouse)
+    // console.log(direction)
+})
+
+//utils
+const objectsToUpdate = []
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
+const sphereMaterial = new THREE.MeshStandardMaterial({
+    metalness: 0.3,
+    roughness: 0.4
+})
+
+const createSphere = (radius, position, mouse) => {
+    const mesh = new THREE.Mesh(sphereGeometry, sphereMaterial)
+    mesh.scale.set(radius, radius, radius)
+    mesh.castShadow = true
+    mesh.position.copy(position)
+    scene.add(mesh)
+
+    const shape = new CANNON.Sphere(radius)
+    const body = new CANNON.Body({
+        mass: 1,
+        position: new CANNON.Vec3(0, 3, 0),
+        shape,
+        material: defaultMaterial
+    })
+    body.position.copy(position)
+    const isX = Math.abs(position.x) < Math.abs(position.z)
+    const isCorner = Math.abs(position.x) > 5 && Math.abs(position.z) > 5
+
+    if (isCorner) {
+        if (position.x < 0 && position.z > 0) {
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * 500), mouse.y * 500, - (position.z) * 50 + (mouse.x * 500)))
+        } else if (position.x > 0 && position.z > 0) {
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * 500), mouse.y * 500, - (position.z) * 50 - (mouse.x * 500)))
+        } else if (position.x > 0 && position.z < 0) {
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * 500), mouse.y * 500, - (position.z) * 50 - (mouse.x * 500)))
+        } else {
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * 500), mouse.y * 500, - (position.z) * 50 + (mouse.x * 500)))
+        }
+    } else {
+        if (isX) {
+            if (position.x < 0) {
+                body.applyLocalForce(new CANNON.Vec3(mouse.x * 500, mouse.y * 500, -(position.z) * 50))
+            } else {
+                body.applyLocalForce(new CANNON.Vec3(- mouse.x * 500, mouse.y * 500, -(position.z) * 50))
+            }
+        } else {
+            if (position.x < 0) {
+                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * 500, mouse.x * 500))
+            } else {
+                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * 500, - mouse.x * 500))
+            }
+        }
+    }
+    // console.log(isX)
+
+    world.addBody(body)
+
+    objectsToUpdate.push({
+        mesh: mesh,
+        body: body
+    })
+}
+
 //Animate
 const clock = new THREE.Clock()
 let oldElapsedTime = 0
@@ -106,6 +210,13 @@ const tick = () => {
 
     const deltaTime = elapsedTime - oldElapsedTime 
     oldElapsedTime = elapsedTime
+
+    world.step(1/60, deltaTime, 3)
+
+    for (const object of objectsToUpdate) {
+        object.mesh.position.copy(object.body.position)
+        object.mesh.quaternion.copy(object.body.quaternion)
+    }
 
     controls.update()
 
