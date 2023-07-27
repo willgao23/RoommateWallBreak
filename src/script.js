@@ -14,7 +14,7 @@ const canvas = document.querySelector('canvas.webgl')
 //Scene
 const scene = new THREE.Scene()
 
-const axesHelper = new THREE.AxesHelper()
+const axesHelper = new THREE.AxesHelper(1)
 scene.add(axesHelper)
 
 //Floor
@@ -69,7 +69,7 @@ window.addEventListener('resize', () =>
 
 //Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 50)
-camera.position.set(-3, 2, 0)
+camera.position.set(-30, 2, 0)
 scene.add(camera)
 
 //Mouse move
@@ -110,10 +110,11 @@ world.addBody(floorBody)
 //Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
-controls.maxDistance = 20
-controls.minDistance = 20
-controls.minPolarAngle = Math.PI * 0.25
+controls.maxDistance = 30
+controls.minDistance = 30
+controls.minPolarAngle = Math.PI * 0.45
 controls.maxPolarAngle = Math.PI * 0.45
+controls.enablePan = false
 
 //Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -169,26 +170,26 @@ const createSphere = (radius, position, mouse) => {
 
     if (isCorner) {
         if (position.x < 0 && position.z > 0) {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * 500), mouse.y * 500, - (position.z) * 50 + (mouse.x * 500)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 + (mouse.x * window.innerWidth)))
         } else if (position.x > 0 && position.z > 0) {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * 500), mouse.y * 500, - (position.z) * 50 - (mouse.x * 500)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 - (mouse.x * window.innerWidth)))
         } else if (position.x > 0 && position.z < 0) {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * 500), mouse.y * 500, - (position.z) * 50 - (mouse.x * 500)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 - (mouse.x * window.innerWidth)))
         } else {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * 500), mouse.y * 500, - (position.z) * 50 + (mouse.x * 500)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 + (mouse.x * window.innerWidth)))
         }
     } else {
         if (isX) {
             if (position.x < 0) {
-                body.applyLocalForce(new CANNON.Vec3(mouse.x * 500, mouse.y * 500, -(position.z) * 50))
+                body.applyLocalForce(new CANNON.Vec3(mouse.x * window.innerWidth, mouse.y * window.innerHeight, -(position.z) * 50))
             } else {
-                body.applyLocalForce(new CANNON.Vec3(- mouse.x * 500, mouse.y * 500, -(position.z) * 50))
+                body.applyLocalForce(new CANNON.Vec3(- mouse.x * window.innerWidth, mouse.y * window.innerHeight, -(position.z) * 50))
             }
         } else {
             if (position.x < 0) {
-                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * 500, mouse.x * 500))
+                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * window.innerHeight, mouse.x * window.innerWidth))
             } else {
-                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * 500, - mouse.x * 500))
+                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * window.innerHeight, - mouse.x * window.innerWidth))
             }
         }
     }
