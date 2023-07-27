@@ -203,6 +203,50 @@ const createSphere = (radius, position, mouse) => {
     })
 }
 
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
+const boxMaterial = new THREE.MeshStandardMaterial({
+    metalness: 0.3,
+    roughness: 0.4,
+})
+
+const createBox = (width, height, depth, position) => {
+    const mesh = new THREE.Mesh(boxGeometry, boxMaterial)
+    mesh.scale.set(width, height, depth)
+    mesh.castShadow = true
+    mesh.position.copy(position)
+    scene.add(mesh)
+
+    const shape = new CANNON.Box(new CANNON.Vec3(width * 0.5, height * 0.5, depth * 0.5))
+    const body = new CANNON.Body({
+        mass: 0.1,
+        position: new CANNON.Vec3(),
+        shape,
+        material: defaultMaterial,
+        type: CANNON.Body.STATIC
+        })
+    body.addEventListener('collide', () => {
+        body.type = CANNON.Body.DYNAMIC
+    })
+    body.sleepSpeedLimit = 2
+    body.position.copy(position)
+    world.addBody(body)
+
+    objectsToUpdate.push({
+        mesh: mesh,
+        body: body
+    })
+}
+
+const createCanvas = () => {
+    for (let x = 0; x < 32; x++) {
+        for (let y = 0; y < 32; y++) {
+            createBox(0.5, 0.5, 0.5, {x: 0, y: y / 2, z: (x / 2) - 8})
+        }
+    }
+}
+
+createCanvas()
+
 //Animate
 const clock = new THREE.Clock()
 let oldElapsedTime = 0
