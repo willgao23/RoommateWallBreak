@@ -167,29 +167,30 @@ const createSphere = (radius, position, mouse) => {
     body.position.copy(position)
     const isX = Math.abs(position.x) < Math.abs(position.z)
     const isCorner = Math.abs(position.x) > 5 && Math.abs(position.z) > 5
+    const scale = 1.2
 
     if (isCorner) {
         if (position.x < 0 && position.z > 0) {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 + (mouse.x * window.innerWidth)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * window.innerWidth * scale), mouse.y * window.innerHeight * scale, - (position.z) * 50 + (mouse.x * window.innerWidth * scale)))
         } else if (position.x > 0 && position.z > 0) {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 - (mouse.x * window.innerWidth)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 + (mouse.x * window.innerWidth * scale), mouse.y * window.innerHeight * scale, - (position.z) * 50 - (mouse.x * window.innerWidth * scale)))
         } else if (position.x > 0 && position.z < 0) {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 - (mouse.x * window.innerWidth)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * window.innerWidth * scale), mouse.y * window.innerHeight * scale, - (position.z) * 50 - (mouse.x * window.innerWidth * scale)))
         } else {
-            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * window.innerWidth), mouse.y * window.innerHeight, - (position.z) * 50 + (mouse.x * window.innerWidth)))
+            body.applyLocalForce(new CANNON.Vec3(- (position.x) * 50 - (mouse.x * window.innerWidth * scale), mouse.y * window.innerHeight * scale, - (position.z) * 50 + (mouse.x * window.innerWidth * scale)))
         }
     } else {
         if (isX) {
             if (position.x < 0) {
-                body.applyLocalForce(new CANNON.Vec3(mouse.x * window.innerWidth, mouse.y * window.innerHeight, -(position.z) * 50))
+                body.applyLocalForce(new CANNON.Vec3(mouse.x * window.innerWidth * scale, mouse.y * window.innerHeight * scale, -(position.z) * 50))
             } else {
-                body.applyLocalForce(new CANNON.Vec3(- mouse.x * window.innerWidth, mouse.y * window.innerHeight, -(position.z) * 50))
+                body.applyLocalForce(new CANNON.Vec3(- mouse.x * window.innerWidth * scale, mouse.y * window.innerHeight * scale, -(position.z) * 50))
             }
         } else {
             if (position.x < 0) {
-                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * window.innerHeight, mouse.x * window.innerWidth))
+                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * window.innerHeight * scale, mouse.x * window.innerWidth * scale))
             } else {
-                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * window.innerHeight, - mouse.x * window.innerWidth))
+                body.applyLocalForce(new CANNON.Vec3(-(position.x) * 50, mouse.y * window.innerHeight * scale, - mouse.x * window.innerWidth * scale))
             }
         }
     }
@@ -238,6 +239,8 @@ const createBox = (width, height, depth, position, color) => {
     })
 }
 
+//pixel art constants
+//Mac
 const black = "#000000"
 const white = "#ffffff"
 const brown = "#38190c"
@@ -278,16 +281,61 @@ const macColors = [[black, black, black, black, black, white, white, white, whit
 [black, purple, purple, purple, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
 [black, black, black, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white]]
 
-const createCanvas = () => {
+//Tony
+const skin2 = "#ffcf87"
+const pink = "#ffa3b1"
+
+const tonyColors = [[black, black, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, pink, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, white, white],
+[black, pink, pink, pink, pink, pink, black, black, white, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, white, black, black, black, black, black, black, black],
+[black, pink, pink, pink, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, black, black, skin2, skin2, black, black, black, black, black, black, black, black, black],
+[black, pink, pink, pink, pink, pink, pink, black, black, white, white, white, white, white, white, white, white, black, black, black, skin2, skin2, skin2, skin2, black, black, black, black, black, black, black, black],
+[black, pink, pink, pink, pink, pink, black, black, pink, black, white, white, white, white, black, black, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, black, black, black, black, black, black, black],
+[black, pink, pink, pink, pink, black, black, pink, pink, black, black, white, white, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, black, skin2, black, black, black, black, black, black, black, black],
+[black, pink, pink, pink, black, black, pink, pink, pink, pink, black, black, black, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, black, black, black, black, black, black, black, black, black],
+[black, pink, pink, pink, black, pink, pink, pink, black, black, skin2, black, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, black, black, black, skin2, black, black, black, black, black, black, black],
+[black, pink, pink, pink, black, pink, pink, black, black, skin2, black, black, skin2, black, black, skin2, skin2, skin2, skin2, skin2, black, black, black, black, skin2, black, black, black, black, black, black, black],
+[black, pink, pink, pink, black, pink, black, black, skin2, skin2, black, skin2, black, white, black, skin2, skin2, black, black, skin2, skin2, skin2, black, skin2, skin2, black, black, black, black, black, black, black],
+[black, pink, pink, pink, pink, black, black, skin2, skin2, black, black, skin2, black, white, black, skin2, black, skin2, skin2, black, black, black, skin2, skin2, skin2, skin2, black, black, black, black, black, black],
+[black, pink, pink, pink, pink, pink, black, skin2, skin2, black, skin2, skin2, black, white, black, skin2, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, black, black, black, black],
+[black, pink, pink, pink, pink, pink, black, black, skin2, black, skin2, skin2, black, white, black, skin2, black, skin2, skin2, skin2, skin2, skin2, black, skin2, skin2, skin2, skin2, black, black, black, black, black],
+[black, pink, pink, pink, black, black, pink, black, skin2, black, black, skin2, black, white, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, black, skin2, skin2, skin2, black, black, black, black, black],
+[black, pink, pink, pink, black, pink, pink, black, black, skin2, black, black, skin2, black, black, skin2, skin2, skin2, skin2, skin2, black, black, black, black, skin2, skin2, black, black, black, black, black, black],
+[black, pink, pink, pink, black, pink, pink, pink, black, black, skin2, black, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, black, black, black, skin2, black, black, black, black, black, black, black],
+[black, pink, pink, pink, black, black, pink, pink, pink, black, skin2, black, black, black, skin2, skin2, skin2, skin2, skin2, skin2, skin2, skin2, black, skin2, black, black, black, black, black, black, black, black],
+[black, pink, pink, pink, pink, black, black, pink, pink, black, black, white, white, black, black, skin2, skin2, skin2, skin2, skin2, skin2, black, black, skin2, black, black, black, black, black, black, black, white],
+[black, pink, pink, pink, pink, pink, black, black, pink, black, white, white, white, white, black, black, black, black, black, black, black, skin2, skin2, skin2, black, black, black, black, black, black, black, white],
+[black, pink, pink, pink, pink, pink, pink, black, black, white, white, white, white, white, white, white, white, white, white, black, black, skin2, skin2, skin2, black, black, black, black, black, black, black, white],
+[black, pink, pink, pink, pink, pink, black, black, white, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, black, black, black, black, black, black, white, white],
+[black, pink, pink, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, pink, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, pink, pink, pink, pink, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, black, black, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],]
+
+const createTonyWall = () => {
     for (let x = 0; x < 32; x++) {
         for (let y = 0; y < 32; y++) {
             console.log(macColors[x][y])
+            createBox(0.5, 0.5, 0.5, {x: 0, y: y / 2, z: (x / 2) - 8}, tonyColors[x][y])
+        }
+    }
+}
+
+const createMacWall = () => {
+    for (let x = 0; x < 32; x++) {
+        for (let y = 0; y < 32; y++) {
             createBox(0.5, 0.5, 0.5, {x: 0, y: y / 2, z: (x / 2) - 8}, macColors[x][y])
         }
     }
 }
 
-createCanvas()
+createTonyWall()
 
 //Animate
 const clock = new THREE.Clock()
