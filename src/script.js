@@ -234,7 +234,7 @@ const createSphere = (radius, position, mouse) => {
     body.addEventListener('collide', playHitSounds)
     const isX = Math.abs(position.x) < Math.abs(position.z)
     const isCorner = Math.abs(position.x) > 5 && Math.abs(position.z) > 5
-    const scale = 1.2
+    const scale = 1.4
 
     if (isCorner) {
         if (position.x < 0 && position.z > 0) {
