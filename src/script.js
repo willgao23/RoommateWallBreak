@@ -6,7 +6,54 @@ import * as dat from 'lil-gui'
 THREE.ColorManagement.enabled = false
 
 //Debug
-const gui = new dat.GUI()
+const gui = new dat.GUI({autoPlace: false})
+gui.domElement.id = 'gui'
+document.getElementById("gui_container").appendChild(gui.domElement)
+const debugObject = {}
+const reset = () => {
+    for (const object of objectsToUpdate) {
+        world.removeBody(object.body)
+        scene.remove(object.mesh)
+    }
+    objectsToUpdate.splice(0, objectsToUpdate.length)
+}
+
+debugObject.createMacWall = () => {
+    reset()
+    createMacWall()
+}
+gui.add(debugObject, 'createMacWall').name("Mac Wall")
+
+debugObject.createEvanWall = () => {
+    reset()
+    createEvanWall()
+}
+gui.add(debugObject, 'createEvanWall').name("Evan Wall")
+
+debugObject.createTonyWall = () => {
+    reset()
+    createTonyWall()
+}
+gui.add(debugObject, 'createTonyWall').name("Tony Wall")
+
+debugObject.createChiliWall = () => {
+    reset()
+    createChiliWall()
+}
+gui.add(debugObject, 'createChiliWall').name("Chili Wall")
+
+debugObject.createJoshWall = () => {
+    reset()
+    createJoshWall()
+}
+gui.add(debugObject, 'createJoshWall').name("Josh Wall")
+
+debugObject.createWillWall = () => {
+    reset()
+    createWillWall()
+}
+gui.add(debugObject, 'createWillWall').name("Will Wall")
+
 
 //Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -499,7 +546,7 @@ const createMacWall = () => {
     }
 }
 
-createWillWall()
+createMacWall()
 
 //Animate
 const clock = new THREE.Clock()
