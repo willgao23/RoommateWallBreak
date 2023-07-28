@@ -61,6 +61,23 @@ const canvas = document.querySelector('canvas.webgl')
 //Scene
 const scene = new THREE.Scene()
 
+const hitSound = new Audio('/sounds/hit.mp3')
+
+const playHitSounds = (collision) =>
+{   
+    const contactStrength = collision.contact.getImpactVelocityAlongNormal()
+    if (contactStrength > 1.5) {
+        if (contactStrength > 30) {
+            hitSound.volume = 1
+        } else {
+            hitSound.volume = collision.contact.getImpactVelocityAlongNormal() / 30
+        }
+        hitSound.currentTime = 0
+        hitSound.play()
+    }  
+}
+
+
 const axesHelper = new THREE.AxesHelper(1)
 scene.add(axesHelper)
 
@@ -212,6 +229,7 @@ const createSphere = (radius, position, mouse) => {
         material: defaultMaterial
     })
     body.position.copy(position)
+    body.addEventListener('collide', playHitSounds)
     const isX = Math.abs(position.x) < Math.abs(position.z)
     const isCorner = Math.abs(position.x) > 5 && Math.abs(position.z) > 5
     const scale = 1.2
@@ -275,6 +293,7 @@ const createBox = (width, height, depth, position, color) => {
         })
     body.addEventListener('collide', () => {
         body.type = CANNON.Body.DYNAMIC
+        playHitSounds
     })
     body.sleepSpeedLimit = 2
     body.position.copy(position)
