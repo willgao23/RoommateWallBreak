@@ -85,9 +85,9 @@ scene.add(axesHelper)
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(100, 100),
     new THREE.MeshStandardMaterial({
-        color: "#777777",
-        metalness: 0.3,
-        roughness: 0.4
+        color: "#A7E8BD",
+        metalness: 0,
+        roughness: 0.5
     })
 )
 
@@ -107,7 +107,7 @@ directionalLight.shadow.camera.left = - 7
 directionalLight.shadow.camera.top = 7
 directionalLight.shadow.camera.right = 7
 directionalLight.shadow.camera.bottom = - 7
-directionalLight.position.set(5, 5, 5)
+directionalLight.position.set(-10, 3, 5)
 scene.add(directionalLight)
 
 //Sizing
@@ -182,7 +182,8 @@ controls.enablePan = false
 
 //Renderer
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    alpha: true
 })
 
 renderer.outputColorSpace = THREE.LinearSRGBColorSpace
@@ -190,6 +191,7 @@ renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setClearColor("#A6DDD4", 1)
 
 //shoot cannonballs
 //get velocity to work, click direction for x and y + z direction velocty
@@ -210,8 +212,8 @@ window.addEventListener('click', () => {
 const objectsToUpdate = []
 const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
 const sphereMaterial = new THREE.MeshStandardMaterial({
-    metalness: 0.3,
-    roughness: 0.4
+    metalness: 0.8,
+    roughness: 0.7
 })
 
 const createSphere = (radius, position, mouse) => {
