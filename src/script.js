@@ -204,12 +204,13 @@ const createSphere = (radius, position, mouse) => {
 }
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
-const boxMaterial = new THREE.MeshStandardMaterial({
-    metalness: 0.3,
-    roughness: 0.4,
-})
 
-const createBox = (width, height, depth, position) => {
+const createBox = (width, height, depth, position, color) => {
+    const boxMaterial = new THREE.MeshStandardMaterial({
+        metalness: 0.3,
+        roughness: 0.4,
+        color: color
+    })
     const mesh = new THREE.Mesh(boxGeometry, boxMaterial)
     mesh.scale.set(width, height, depth)
     mesh.castShadow = true
@@ -237,10 +238,51 @@ const createBox = (width, height, depth, position) => {
     })
 }
 
+const black = "#000000"
+const white = "#ffffff"
+const brown = "#38190c"
+const skin1 = "#fac0aa"
+const salmon = "#c75056"
+const blue = "#4c769e"
+const purple = "#958da1"
+const macColors = [[black, black, black, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, purple, purple, purple, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, white, white],
+[black, purple, purple, purple, purple, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, black, black, brown, brown, black, white, white],
+[black, purple, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, skin1, skin1, black, black, black, brown, black, black, black, white],
+[black, purple, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, white, black, skin1, skin1, skin1, skin1, skin1, black, brown, brown, black, salmon, salmon, black, black],
+[black, purple, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, black, black, black, skin1, skin1, black, black, black, brown, brown, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, black, black, white, white, white, white, white, black, black, black, black, black, skin1, skin1, skin1, black, black, brown, brown, brown, black, salmon, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, purple, black, white, white, white, white, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, black, black, brown, black, salmon, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, purple, black, black, white, white, black, black, skin1, skin1, skin1, skin1, skin1, skin1, brown, brown, skin1, skin1, skin1, black, black, black, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, black, black, black, black, black, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, brown, brown, skin1, skin1, black, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, black, black, skin1, skin1, black, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, brown, brown, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, black, black, skin1, skin1, black, black, skin1, skin1, skin1, black, skin1, skin1, skin1, skin1, skin1, blue, blue, brown, brown, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, black, black, skin1, skin1, skin1, black, skin1, skin1, black, black, black, skin1, skin1, skin1, skin1, skin1, blue, blue, brown, brown, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, black, skin1, skin1, skin1, black, black, skin1, black, white, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, brown, skin1, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, black, skin1, skin1, skin1, black, skin1, skin1, black, white, black, skin1, skin1, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, black, skin1, skin1, skin1, black, skin1, skin1, black, white, black, skin1, black, skin1, skin1, skin1, black, black, skin1, skin1, skin1, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, black, skin1, skin1, skin1, black, black, skin1, black, white, black, skin1, black, skin1, skin1, black, skin1, skin1, skin1, skin1, skin1, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, black, skin1, skin1, skin1, skin1, black, black, skin1, black, black, skin1, skin1, black, black, skin1, skin1, skin1, skin1, brown, skin1, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, black, black, black, skin1, skin1, skin1, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, blue, blue, brown, brown, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, black, black, black, black, black, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, blue, blue, brown, brown, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, purple, black, black, white, black, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, skin1, brown, brown, black, salmon, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, purple, black, white, white, white, black, black, skin1, skin1, skin1, skin1, skin1, skin1, skin1, brown, brown, skin1, black, black, salmon, salmon, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, black, black, white, white, white, white, black, black, skin1, skin1, skin1, skin1, skin1, skin1, brown, skin1, skin1, black, black, black, black, black, salmon, salmon, salmon, black],
+[black, purple, purple, purple, purple, purple, black, white, white, white, white, white, white, white, black, black, black, black, black, skin1, skin1, skin1, skin1, skin1, black, black, brown, brown, black, salmon, salmon, black],
+[black, purple, purple, purple, purple, black, black, white, white, white, white, white, white, white, white, white, white, white, black, black, skin1, skin1, skin1, black, brown, brown, brown, brown, black, black, black, black],
+[black, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, black, black, black, brown, brown, brown, black, black, white],
+[black, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, black, black, black, black, black, white, white],
+[black, purple, purple, purple, purple, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, purple, purple, purple, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white],
+[black, black, black, black, black, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white, white]]
+
 const createCanvas = () => {
     for (let x = 0; x < 32; x++) {
         for (let y = 0; y < 32; y++) {
-            createBox(0.5, 0.5, 0.5, {x: 0, y: y / 2, z: (x / 2) - 8})
+            console.log(macColors[x][y])
+            createBox(0.5, 0.5, 0.5, {x: 0, y: y / 2, z: (x / 2) - 8}, macColors[x][y])
         }
     }
 }
